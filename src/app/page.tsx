@@ -1,12 +1,12 @@
-import HomePage from '@/app/(delete-this-and-modify-page.tsx)/HomePage';
+import PostsList from '@/app/posts/components/posts-list';
 
 /**
- * The main page component that renders the HomePage component.
+ * The main page component that renders the PostsList component.
  *
- * @returns {JSX.Element} The rendered HomePage component.
+ * @returns {JSX.Element} The rendered PostsList component.
  */
 const Page = () => {
-    return <HomePage />;
+    return <PostsList />;
 };
 
 export default Page;
