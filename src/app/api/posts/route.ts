@@ -32,62 +32,88 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-    const body = await request.json();
+    try {
+        const body = await request.json();
 
-    const parsed = postSchema.safeParse(body);
-    if (!parsed.success) {
-        return NextResponse.json({ error: parsed.error.format() }, { status: 400 });
+        const parsed = postSchema.safeParse(body);
+        if (!parsed.success) {
+            const errorMessages = Object.entries(parsed.error.flatten().fieldErrors)
+                .map(([field, messages]) => `${field}: ${messages?.join(', ')}`)
+                .join('; ');
+            console.error('❌ Validation error:', errorMessages);
+            return NextResponse.json({ error: errorMessages }, { status: 400 });
+        }
+
+        const supabase = getSupabaseServiceClient();
+        const cleanHtml = sanitizeHtml(parsed.data.html_content);
+
+        console.log('📝 Creating post with data:', { ...parsed.data, html_content: '...' });
+
+        const { error, data } = await supabase
+            .from('posts')
+            .insert({
+                ...parsed.data,
+                html_content: cleanHtml,
+                author_id: null
+            })
+            .select()
+            .single();
+
+        if (error) {
+            console.error('❌ Supabase error:', error);
+            return NextResponse.json({ error: error.message }, { status: 500 });
+        }
+
+        console.log('✅ Post created successfully');
+        return NextResponse.json(toPublic(data as PostRow), { status: 201 });
+    } catch (err) {
+        console.error('❌ Exception in POST:', err);
+        return NextResponse.json({ error: String(err) }, { status: 500 });
     }
-
-    const supabase = getSupabaseServiceClient();
-    const cleanHtml = sanitizeHtml(parsed.data.html_content);
-
-    const { error, data } = await supabase
-        .from('posts')
-        .insert({
-            ...parsed.data,
-            html_content: cleanHtml,
-            author_id: null
-        })
-        .select()
-        .single();
-
-    if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json(toPublic(data as PostRow), { status: 201 });
 }
 
 // ---- UPDATE ------------------------------------------------------
 export async function PUT(request: Request) {
-    const { id, ...rest } = await request.json();
+    try {
+        const { id, ...rest } = await request.json();
 
-    if (!id) {
-        return NextResponse.json({ error: 'Missing post ID' }, { status: 400 });
+        if (!id) {
+            return NextResponse.json({ error: 'Missing post ID' }, { status: 400 });
+        }
+
+        const parsed = postSchema.partial().safeParse(rest);
+        if (!parsed.success) {
+            const errorMessages = Object.entries(parsed.error.flatten().fieldErrors)
+                .map(([field, messages]) => `${field}: ${messages?.join(', ')}`)
+                .join('; ');
+            console.error('❌ Validation error:', errorMessages);
+            return NextResponse.json({ error: errorMessages }, { status: 400 });
+        }
+
+        const supabase = getSupabaseServiceClient();
+
+        const updatePayload = {
+            ...parsed.data,
+            ...(parsed.data?.html_content && {
+                html_content: sanitizeHtml(parsed.data.html_content)
+            })
+        };
+
+        console.log('📝 Updating post with payload:', { id, updatePayload });
+
+        const { error, data } = await supabase.from('posts').update(updatePayload).eq('id', id).select().single();
+
+        if (error) {
+            console.error('❌ Supabase error:', error);
+            return NextResponse.json({ error: error.message }, { status: 500 });
+        }
+
+        console.log('✅ Post updated successfully');
+        return NextResponse.json(toPublic(data as PostRow));
+    } catch (err) {
+        console.error('❌ Exception in PUT:', err);
+        return NextResponse.json({ error: String(err) }, { status: 500 });
     }
-
-    const parsed = postSchema.partial().safeParse(rest);
-    if (!parsed.success) {
-        return NextResponse.json({ error: parsed.error.format() }, { status: 400 });
-    }
-
-    const supabase = getSupabaseServiceClient();
-
-    const updatePayload = {
-        ...parsed.data,
-        ...(parsed.data?.html_content && {
-            html_content: sanitizeHtml(parsed.data.html_content)
-        })
-    };
-
-    const { error, data } = await supabase.from('posts').update(updatePayload).eq('id', id).select().single();
-
-    if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json(toPublic(data as PostRow));
 }
 
 // ---- DELETE ------------------------------------------------------

@@ -13,10 +13,10 @@ import {
 } from '@/registry/new-york-v4/ui/alert-dialog';
 import { Button } from '@/registry/new-york-v4/ui/button';
 import { Input } from '@/registry/new-york-v4/ui/input';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/registry/new-york-v4/ui/resizable';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/registry/new-york-v4/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york-v4/ui/tabs';
 import { Textarea } from '@/registry/new-york-v4/ui/textarea';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/registry/new-york-v4/ui/resizable';
 
 import { FileText, Plus, Trash2 } from 'lucide-react';
 
@@ -173,11 +173,23 @@ const PostsPage = () => {
             });
 
             const data = await response.json();
+            console.log('🔵 Response ok:', response.ok, 'Data:', data);
 
             if (response.ok) {
-                fetchPosts();
+                console.log('✅ Success - updating state');
+                // Update posts list without full reload
+                if (editingPost) {
+                    // Update existing post in the list
+                    console.log('✅ Updating existing post');
+                    setPosts(posts.map((p) => (p.id === editingPost.id ? data : p)));
+                } else {
+                    // Add new post to the list
+                    console.log('✅ Adding new post');
+                    setPosts([data, ...posts]);
+                }
                 handleNewPost();
             } else {
+                console.log('❌ Error:', data.error);
                 setError(data.error || 'Failed to save post');
             }
         } catch (err) {
@@ -340,98 +352,98 @@ const PostsPage = () => {
                     <div className='flex h-full flex-col border-l border-neutral-300 bg-white text-neutral-900'>
                         <form onSubmit={handleSubmit} className='flex flex-1 flex-col overflow-hidden'>
                             <div className='flex-1 space-y-3 overflow-y-auto p-4'>
-                            {/* Title */}
-                            <div className='space-y-1'>
-                                <label className='block text-xs font-medium text-neutral-700'>Title</label>
-                                <Input
-                                    placeholder='Post title'
-                                    value={formData.title}
-                                    onChange={(e) => handleInputChange('title', e.target.value)}
-                                    className='h-8 border-neutral-300 bg-neutral-50 text-xs text-neutral-900 placeholder:text-neutral-400'
-                                />
-                            </div>
-
-                            {/* Excerpt */}
-                            <div className='space-y-1'>
-                                <label className='block text-xs font-medium text-neutral-700'>Excerpt</label>
-                                <Textarea
-                                    placeholder='Brief summary'
-                                    value={formData.excerpt}
-                                    onChange={(e) => handleInputChange('excerpt', e.target.value)}
-                                    className='resize-none border-neutral-300 bg-neutral-50 text-xs text-neutral-900 placeholder:text-neutral-400'
-                                    rows={3}
-                                />
-                            </div>
-
-                            {/* Status */}
-                            <div className='space-y-1'>
-                                <label className='block text-xs font-medium text-neutral-700'>Status</label>
-                                <Select
-                                    value={formData.status}
-                                    onValueChange={(value) => handleInputChange('status', value)}>
-                                    <SelectTrigger className='h-8 border-neutral-300 bg-neutral-50 text-xs text-neutral-900'>
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent className='border-neutral-300 bg-neutral-50'>
-                                        <SelectItem value='draft' className='text-neutral-900'>
-                                            Draft
-                                        </SelectItem>
-                                        <SelectItem value='published' className='text-neutral-900'>
-                                            Published
-                                        </SelectItem>
-                                        <SelectItem value='archived' className='text-neutral-900'>
-                                            Archived
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-
-                            {error && (
-                                <div className='rounded border border-red-200 bg-red-50 p-2 text-xs text-red-700'>
-                                    {error}
+                                {/* Title */}
+                                <div className='space-y-1'>
+                                    <label className='block text-xs font-medium text-neutral-700'>Title</label>
+                                    <Input
+                                        placeholder='Post title'
+                                        value={formData.title}
+                                        onChange={(e) => handleInputChange('title', e.target.value)}
+                                        className='h-8 border-neutral-300 bg-neutral-50 text-xs text-neutral-900 placeholder:text-neutral-400'
+                                    />
                                 </div>
-                            )}
-                        </div>
 
-                        {/* Action Buttons */}
-                        <div className='space-y-2 border-t border-neutral-300 p-4'>
-                            <Button
-                                type='submit'
-                                disabled={isSubmitting}
-                                className='h-8 w-full gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
-                                {isSubmitting ? 'Saving...' : editingPost ? 'Update Post' : 'Create Post'}
-                            </Button>
-                            {editingPost && (
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <Button
-                                            type='button'
-                                            className='h-8 w-full gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
-                                            <Trash2 className='h-3 w-3' />
-                                            Delete Post
-                                        </Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogTitle>Delete Post?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            This action cannot be undone. "{editingPost.title}" will be permanently
-                                            deleted.
-                                        </AlertDialogDescription>
-                                        <div className='flex justify-end gap-3'>
-                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction
-                                                onClick={() => handleDelete(editingPost.id)}
-                                                className='h-8 gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
-                                                Delete
-                                            </AlertDialogAction>
-                                        </div>
-                                    </AlertDialogContent>
-                                </AlertDialog>
-                            )}
-                        </div>
-                    </form>
-                </div>
-            </ResizablePanel>
+                                {/* Excerpt */}
+                                <div className='space-y-1'>
+                                    <label className='block text-xs font-medium text-neutral-700'>Excerpt</label>
+                                    <Textarea
+                                        placeholder='Brief summary'
+                                        value={formData.excerpt}
+                                        onChange={(e) => handleInputChange('excerpt', e.target.value)}
+                                        className='resize-none border-neutral-300 bg-neutral-50 text-xs text-neutral-900 placeholder:text-neutral-400'
+                                        rows={3}
+                                    />
+                                </div>
+
+                                {/* Status */}
+                                <div className='space-y-1'>
+                                    <label className='block text-xs font-medium text-neutral-700'>Status</label>
+                                    <Select
+                                        value={formData.status}
+                                        onValueChange={(value) => handleInputChange('status', value)}>
+                                        <SelectTrigger className='h-8 border-neutral-300 bg-neutral-50 text-xs text-neutral-900'>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent className='border-neutral-300 bg-neutral-50'>
+                                            <SelectItem value='draft' className='text-neutral-900'>
+                                                Draft
+                                            </SelectItem>
+                                            <SelectItem value='published' className='text-neutral-900'>
+                                                Published
+                                            </SelectItem>
+                                            <SelectItem value='archived' className='text-neutral-900'>
+                                                Archived
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                {error && (
+                                    <div className='rounded border border-red-200 bg-red-50 p-2 text-xs text-red-700'>
+                                        {error}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className='space-y-2 border-t border-neutral-300 p-4'>
+                                <Button
+                                    type='submit'
+                                    disabled={isSubmitting}
+                                    className='h-8 w-full gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
+                                    {isSubmitting ? 'Saving...' : editingPost ? 'Update Post' : 'Create Post'}
+                                </Button>
+                                {editingPost && (
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button
+                                                type='button'
+                                                className='h-8 w-full gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
+                                                <Trash2 className='h-3 w-3' />
+                                                Delete Post
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogTitle>Delete Post?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone. "{editingPost.title}" will be permanently
+                                                deleted.
+                                            </AlertDialogDescription>
+                                            <div className='flex justify-end gap-3'>
+                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction
+                                                    onClick={() => handleDelete(editingPost.id)}
+                                                    className='h-8 gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
+                                                    Delete
+                                                </AlertDialogAction>
+                                            </div>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                )}
+                            </div>
+                        </form>
+                    </div>
+                </ResizablePanel>
             </ResizablePanelGroup>
         </div>
     );
