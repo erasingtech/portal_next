@@ -278,7 +278,7 @@ export default function PostsPage() {
                                                 placeholder='Post title'
                                                 value={formData.title}
                                                 onChange={(e) => handleInputChange('title', e.target.value)}
-                                                className='h-8 min-w-48 border-neutral-300 bg-neutral-50 text-xs text-neutral-900 placeholder:text-neutral-400'
+                                                className='h-8 min-w-96 border-neutral-300 bg-neutral-50 text-xs text-neutral-900 placeholder:text-neutral-400'
                                             />
                                         </div>
                                         <div className='flex flex-col gap-1'>
