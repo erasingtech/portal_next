@@ -206,77 +206,6 @@ export default function PostsPage() {
 
     return (
         <div className='flex h-screen w-full flex-col bg-neutral-100'>
-            <div className='w-full border-b border-neutral-300 bg-white p-4'>
-                <form onSubmit={handleSubmit} className='flex flex-col gap-4 md:flex-row'>
-                    <div className='space-y-1'>
-                        <label className='block text-xs font-medium text-neutral-700'>Title</label>
-                        <Input
-                            placeholder='Post title'
-                            value={formData.title}
-                            onChange={(e) => handleInputChange('title', e.target.value)}
-                            className='h-8 min-w-48 border-neutral-300 bg-neutral-50 text-xs text-neutral-900 placeholder:text-neutral-400'
-                        />
-                    </div>
-                    <div className='space-y-1'>
-                        <label className='block text-xs font-medium text-neutral-700'>Status</label>
-                        <Select value={formData.status} onValueChange={(value) => handleInputChange('status', value)}>
-                            <SelectTrigger className='h-8 min-w-32 border-neutral-300 bg-neutral-50 text-xs text-neutral-900'>
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className='border-neutral-300 bg-neutral-50'>
-                                <SelectItem value='draft' className='text-neutral-900'>
-                                    Draft
-                                </SelectItem>
-                                <SelectItem value='published' className='text-neutral-900'>
-                                    Published
-                                </SelectItem>
-                                <SelectItem value='archived' className='text-neutral-900'>
-                                    Archived
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div className='flex flex-col gap-2 md:ml-4'>
-                        <Button
-                            type='submit'
-                            disabled={isSubmitting}
-                            className='h-8 w-full gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
-                            {isSubmitting ? 'Saving...' : editingPost ? 'Update Post' : 'Create Post'}
-                        </Button>
-                        {editingPost && (
-                            <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                    <Button
-                                        type='button'
-                                        className='h-8 w-full gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
-                                        <Trash2 className='h-3 w-3' />
-                                        Delete
-                                    </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                    <AlertDialogTitle>Delete Post?</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        This action cannot be undone. "{editingPost.title}" will be permanently deleted.
-                                    </AlertDialogDescription>
-                                    <div className='flex justify-end gap-3'>
-                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction
-                                            onClick={() => handleDelete(editingPost.id)}
-                                            className='h-8 gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
-                                            Delete
-                                        </AlertDialogAction>
-                                    </div>
-                                </AlertDialogContent>
-                            </AlertDialog>
-                        )}
-                    </div>
-                    {error && (
-                        <div className='mt-2 rounded border border-red-200 bg-red-50 p-2 text-xs text-red-700'>
-                            {error}
-                        </div>
-                    )}
-                </form>
-            </div>
             <div className='flex flex-1'>
                 <ResizablePanelGroup direction='horizontal' className='flex-1'>
                     <ResizablePanel defaultSize={20} minSize={15} maxSize={40} collapsible>
@@ -339,93 +268,171 @@ export default function PostsPage() {
                     </ResizablePanel>
                     <ResizableHandle withHandle />
                     <ResizablePanel defaultSize={50} minSize={30}>
-                        <ResizablePanelGroup direction='horizontal'>
-                            <ResizablePanel defaultSize={60} minSize={30}>
-                                <div className='flex h-full flex-col border-r border-neutral-300 bg-white'>
-                                    <Tabs defaultValue='content' className='flex h-full flex-col'>
-                                        <TabsList className='grid w-full grid-cols-2'>
-                                            <TabsTrigger value='content'>Content</TabsTrigger>
-                                            <TabsTrigger value='excerpt'>Excerpt</TabsTrigger>
-                                        </TabsList>
-                                        <TabsContent value='content' className='flex flex-1 flex-col'>
-                                            <Tabs defaultValue='html' className='flex flex-1 flex-col'>
-                                                <TabsList className='grid w-full grid-cols-2'>
-                                                    <TabsTrigger value='html'>HTML</TabsTrigger>
-                                                    <TabsTrigger value='js'>JS</TabsTrigger>
-                                                </TabsList>
-                                                <TabsContent value='html' className='m-0 flex-1 overflow-hidden'>
-                                                    <textarea
-                                                        placeholder='<div>Hello World</div>'
-                                                        className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
-                                                        value={formData.html}
-                                                        onChange={(e) => handleInputChange('html', e.target.value)}
-                                                        spellCheck={false}
-                                                    />
-                                                </TabsContent>
-                                                <TabsContent value='js' className='m-0 flex-1 overflow-hidden'>
-                                                    <textarea
-                                                        placeholder='console.log(1);'
-                                                        className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
-                                                        value={formData.js}
-                                                        onChange={(e) => handleInputChange('js', e.target.value)}
-                                                        spellCheck={false}
-                                                    />
-                                                </TabsContent>
-                                            </Tabs>
-                                        </TabsContent>
-                                        <TabsContent value='excerpt' className='flex flex-1 flex-col'>
-                                            <Tabs defaultValue='html_excerpt' className='flex flex-1 flex-col'>
-                                                <TabsList className='grid w-full grid-cols-2'>
-                                                    <TabsTrigger value='html_excerpt'>HTML</TabsTrigger>
-                                                    <TabsTrigger value='js_excerpt'>JS</TabsTrigger>
-                                                </TabsList>
-                                                <TabsContent
-                                                    value='html_excerpt'
-                                                    className='m-0 flex-1 overflow-hidden'>
-                                                    <textarea
-                                                        placeholder='<div>Excerpt HTML</div>'
-                                                        className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
-                                                        value={formData.html_excerpt}
-                                                        onChange={(e) =>
-                                                            handleInputChange('html_excerpt', e.target.value)
-                                                        }
-                                                        spellCheck={false}
-                                                    />
-                                                </TabsContent>
-                                                <TabsContent value='js_excerpt' className='m-0 flex-1 overflow-hidden'>
-                                                    <textarea
-                                                        placeholder='console.log(2);'
-                                                        className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
-                                                        value={formData.js_excerpt}
-                                                        onChange={(e) =>
-                                                            handleInputChange('js_excerpt', e.target.value)
-                                                        }
-                                                        spellCheck={false}
-                                                    />
-                                                </TabsContent>
-                                            </Tabs>
-                                        </TabsContent>
-                                    </Tabs>
-                                </div>
-                            </ResizablePanel>
-                            <ResizableHandle withHandle />
-                            <ResizablePanel defaultSize={40} minSize={20} collapsible>
-                                <div className='flex h-full flex-col bg-white'>
-                                    <div className='border-b border-neutral-300 bg-neutral-100 px-3 py-2'>
-                                        <div className='text-xs font-semibold text-neutral-700'>PREVIEW</div>
-                                    </div>
-                                    <div className='flex-1 overflow-hidden'>
-                                        <iframe
-                                            key={previewKey}
-                                            srcDoc={previewHtml}
-                                            className='h-full w-full border-0 bg-white'
-                                            sandbox='allow-scripts'
-                                            title='Preview'
+                        <div className='flex h-full flex-col'>
+                            <div className='border-b border-neutral-300 bg-white p-4'>
+                                <form onSubmit={handleSubmit} className='flex flex-col gap-4 md:flex-row'>
+                                    <div className='space-y-1'>
+                                        <label className='block text-xs font-medium text-neutral-700'>Title</label>
+                                        <Input
+                                            placeholder='Post title'
+                                            value={formData.title}
+                                            onChange={(e) => handleInputChange('title', e.target.value)}
+                                            className='h-8 min-w-48 border-neutral-300 bg-neutral-50 text-xs text-neutral-900 placeholder:text-neutral-400'
                                         />
                                     </div>
-                                </div>
-                            </ResizablePanel>
-                        </ResizablePanelGroup>
+                                    <div className='space-y-1'>
+                                        <label className='block text-xs font-medium text-neutral-700'>Status</label>
+                                        <Select
+                                            value={formData.status}
+                                            onValueChange={(value) => handleInputChange('status', value)}>
+                                            <SelectTrigger className='h-8 min-w-32 border-neutral-300 bg-neutral-50 text-xs text-neutral-900'>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent className='border-neutral-300 bg-neutral-50'>
+                                                <SelectItem value='draft' className='text-neutral-900'>
+                                                    Draft
+                                                </SelectItem>
+                                                <SelectItem value='published' className='text-neutral-900'>
+                                                    Published
+                                                </SelectItem>
+                                                <SelectItem value='archived' className='text-neutral-900'>
+                                                    Archived
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className='flex flex-col gap-2 md:ml-4'>
+                                        <Button
+                                            type='submit'
+                                            disabled={isSubmitting}
+                                            className='h-8 w-full gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
+                                            {isSubmitting ? 'Saving...' : editingPost ? 'Update Post' : 'Create Post'}
+                                        </Button>
+                                        {editingPost && (
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button
+                                                        type='button'
+                                                        className='h-8 w-full gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
+                                                        <Trash2 className='h-3 w-3' />
+                                                        Delete
+                                                    </Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogTitle>Delete Post?</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This action cannot be undone. "{editingPost.title}" will be
+                                                        permanently deleted.
+                                                    </AlertDialogDescription>
+                                                    <div className='flex justify-end gap-3'>
+                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction
+                                                            onClick={() => handleDelete(editingPost.id)}
+                                                            className='h-8 gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
+                                                            Delete
+                                                        </AlertDialogAction>
+                                                    </div>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        )}
+                                    </div>
+                                    {error && (
+                                        <div className='mt-2 rounded border border-red-200 bg-red-50 p-2 text-xs text-red-700'>
+                                            {error}
+                                        </div>
+                                    )}
+                                </form>
+                            </div>
+                            <ResizablePanelGroup direction='horizontal' className='flex-1'>
+                                <ResizablePanel defaultSize={60} minSize={30}>
+                                    <div className='flex h-full flex-col border-r border-neutral-300 bg-white'>
+                                        <Tabs defaultValue='content' className='flex h-full flex-col'>
+                                            <TabsList className='grid w-full grid-cols-2'>
+                                                <TabsTrigger value='content'>Content</TabsTrigger>
+                                                <TabsTrigger value='excerpt'>Excerpt</TabsTrigger>
+                                            </TabsList>
+                                            <TabsContent value='content' className='flex flex-1 flex-col'>
+                                                <Tabs defaultValue='html' className='flex flex-1 flex-col'>
+                                                    <TabsList className='grid w-full grid-cols-2'>
+                                                        <TabsTrigger value='html'>HTML</TabsTrigger>
+                                                        <TabsTrigger value='js'>JS</TabsTrigger>
+                                                    </TabsList>
+                                                    <TabsContent value='html' className='m-0 flex-1 overflow-hidden'>
+                                                        <textarea
+                                                            placeholder='<div>Hello World</div>'
+                                                            className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
+                                                            value={formData.html}
+                                                            onChange={(e) => handleInputChange('html', e.target.value)}
+                                                            spellCheck={false}
+                                                        />
+                                                    </TabsContent>
+                                                    <TabsContent value='js' className='m-0 flex-1 overflow-hidden'>
+                                                        <textarea
+                                                            placeholder='console.log(1);'
+                                                            className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
+                                                            value={formData.js}
+                                                            onChange={(e) => handleInputChange('js', e.target.value)}
+                                                            spellCheck={false}
+                                                        />
+                                                    </TabsContent>
+                                                </Tabs>
+                                            </TabsContent>
+                                            <TabsContent value='excerpt' className='flex flex-1 flex-col'>
+                                                <Tabs defaultValue='html_excerpt' className='flex flex-1 flex-col'>
+                                                    <TabsList className='grid w-full grid-cols-2'>
+                                                        <TabsTrigger value='html_excerpt'>HTML</TabsTrigger>
+                                                        <TabsTrigger value='js_excerpt'>JS</TabsTrigger>
+                                                    </TabsList>
+                                                    <TabsContent
+                                                        value='html_excerpt'
+                                                        className='m-0 flex-1 overflow-hidden'>
+                                                        <textarea
+                                                            placeholder='<div>Excerpt HTML</div>'
+                                                            className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
+                                                            value={formData.html_excerpt}
+                                                            onChange={(e) =>
+                                                                handleInputChange('html_excerpt', e.target.value)
+                                                            }
+                                                            spellCheck={false}
+                                                        />
+                                                    </TabsContent>
+                                                    <TabsContent
+                                                        value='js_excerpt'
+                                                        className='m-0 flex-1 overflow-hidden'>
+                                                        <textarea
+                                                            placeholder='console.log(2);'
+                                                            className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
+                                                            value={formData.js_excerpt}
+                                                            onChange={(e) =>
+                                                                handleInputChange('js_excerpt', e.target.value)
+                                                            }
+                                                            spellCheck={false}
+                                                        />
+                                                    </TabsContent>
+                                                </Tabs>
+                                            </TabsContent>
+                                        </Tabs>
+                                    </div>
+                                </ResizablePanel>
+                                <ResizableHandle withHandle />
+                                <ResizablePanel defaultSize={40} minSize={20} collapsible>
+                                    <div className='flex h-full flex-col bg-white'>
+                                        <div className='border-b border-neutral-300 bg-neutral-100 px-3 py-2'>
+                                            <div className='text-xs font-semibold text-neutral-700'>PREVIEW</div>
+                                        </div>
+                                        <div className='flex-1 overflow-hidden'>
+                                            <iframe
+                                                key={previewKey}
+                                                srcDoc={previewHtml}
+                                                className='h-full w-full border-0 bg-white'
+                                                sandbox='allow-scripts'
+                                                title='Preview'
+                                            />
+                                        </div>
+                                    </div>
+                                </ResizablePanel>
+                            </ResizablePanelGroup>
+                        </div>
                     </ResizablePanel>
                 </ResizablePanelGroup>
             </div>
