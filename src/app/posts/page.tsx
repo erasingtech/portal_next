@@ -178,11 +178,25 @@ export default function PostsPage() {
 
             if (response.ok) {
                 if (editingPost) {
-                    setPosts(posts.map((p) => (p.id === editingPost.id ? data : p)));
+                    // Update the post in the list and keep it selected
+                    const updatedPost = data;
+                    setPosts(posts.map((p) => (p.id === editingPost.id ? updatedPost : p)));
+                    setEditingPost(updatedPost);
+                    setFormData({
+                        title: updatedPost.title,
+                        slug: updatedPost.slug,
+                        excerpt: updatedPost.excerpt || '',
+                        html_excerpt: updatedPost.html_excerpt || '',
+                        js_excerpt: updatedPost.js_excerpt || '',
+                        status: updatedPost.status || 'draft',
+                        html: updatedPost.html_content,
+                        js: updatedPost.js_content || ''
+                    });
                 } else {
+                    // New post created, add to list and select it
                     setPosts([data, ...posts]);
+                    handleNewPost();
                 }
-                handleNewPost();
             } else {
                 setError(data.error || 'Failed to save post');
             }
