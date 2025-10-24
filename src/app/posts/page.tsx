@@ -426,14 +426,30 @@ export default function PostsPage() {
                                             onValueChange={(val) => setActiveTab(val as 'content' | 'excerpt')}
                                             className='flex h-full flex-col'>
                                             <TabsList className='grid w-full grid-cols-2 bg-neutral-900'>
-                                                <TabsTrigger value='excerpt'>Excerpt</TabsTrigger>
-                                                <TabsTrigger value='content'>Content</TabsTrigger>
+                                                <TabsTrigger
+                                                    value='excerpt'
+                                                    className='text-neutral-400 data-[state=active]:bg-blue-600 data-[state=active]:text-white'>
+                                                    Excerpt
+                                                </TabsTrigger>
+                                                <TabsTrigger
+                                                    value='content'
+                                                    className='text-neutral-400 data-[state=active]:bg-blue-600 data-[state=active]:text-white'>
+                                                    Content
+                                                </TabsTrigger>
                                             </TabsList>
                                             <TabsContent value='excerpt' className='flex flex-1 flex-col'>
                                                 <Tabs defaultValue='html_excerpt' className='flex flex-1 flex-col'>
                                                     <TabsList className='grid w-full grid-cols-2 bg-neutral-900'>
-                                                        <TabsTrigger value='html_excerpt'>HTML</TabsTrigger>
-                                                        <TabsTrigger value='js_excerpt'>JS</TabsTrigger>
+                                                        <TabsTrigger
+                                                            value='html_excerpt'
+                                                            className='text-neutral-400 data-[state=active]:bg-blue-600 data-[state=active]:text-white'>
+                                                            HTML
+                                                        </TabsTrigger>
+                                                        <TabsTrigger
+                                                            value='js_excerpt'
+                                                            className='text-neutral-400 data-[state=active]:bg-blue-600 data-[state=active]:text-white'>
+                                                            JS
+                                                        </TabsTrigger>
                                                     </TabsList>
                                                     <TabsContent
                                                         value='html_excerpt'
@@ -460,8 +476,16 @@ export default function PostsPage() {
                                             <TabsContent value='content' className='flex flex-1 flex-col'>
                                                 <Tabs defaultValue='html' className='flex flex-1 flex-col'>
                                                     <TabsList className='grid w-full grid-cols-2 bg-neutral-900'>
-                                                        <TabsTrigger value='html'>HTML</TabsTrigger>
-                                                        <TabsTrigger value='js'>JS</TabsTrigger>
+                                                        <TabsTrigger
+                                                            value='html'
+                                                            className='text-neutral-400 data-[state=active]:bg-blue-600 data-[state=active]:text-white'>
+                                                            HTML
+                                                        </TabsTrigger>
+                                                        <TabsTrigger
+                                                            value='js'
+                                                            className='text-neutral-400 data-[state=active]:bg-blue-600 data-[state=active]:text-white'>
+                                                            JS
+                                                        </TabsTrigger>
                                                     </TabsList>
                                                     <TabsContent value='html' className='m-0 flex-1 overflow-hidden'>
                                                         <CodeEditor
