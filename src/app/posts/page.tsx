@@ -17,7 +17,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/registry
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/registry/new-york-v4/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/registry/new-york-v4/ui/tabs';
 
-import { FileText, Plus, Trash2 } from 'lucide-react';
+import { Copy, FileText, Plus, Trash2 } from 'lucide-react';
 
 interface Post {
     id: string;
@@ -34,6 +34,62 @@ interface Post {
     created_at: string;
     updated_at: string;
 }
+
+interface CodeEditorProps {
+    language: 'html' | 'javascript';
+    value: string;
+    onChange: (value: string) => void;
+    placeholder?: string;
+}
+
+const CodeEditor = ({ language, value, onChange, placeholder }: CodeEditorProps) => {
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(value);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
+
+    return (
+        <div className='flex h-full flex-col overflow-hidden'>
+            <div className='flex items-center justify-between border-b border-neutral-300 bg-neutral-900 px-3 py-2'>
+                <span className='text-xs font-semibold text-neutral-300'>
+                    {language === 'html' ? 'HTML' : 'JavaScript'}
+                </span>
+                <button
+                    onClick={handleCopy}
+                    className='rounded p-1 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200'
+                    title='Copy code'>
+                    <Copy className='h-3.5 w-3.5' />
+                </button>
+            </div>
+            <div className='flex flex-1 overflow-hidden'>
+                <div className='flex w-12 flex-col items-center border-r border-neutral-700 bg-neutral-950 py-2 text-right'>
+                    {value.split('\n').map((_, i) => (
+                        <div key={i} className='h-6 px-2 text-xs leading-6 text-neutral-600'>
+                            {i + 1}
+                        </div>
+                    ))}
+                </div>
+                <div className='flex-1 overflow-hidden'>
+                    <textarea
+                        placeholder={placeholder}
+                        className='h-full w-full resize-none border-0 bg-neutral-950 p-3 font-mono text-sm text-neutral-200 placeholder:text-neutral-700 focus:bg-neutral-950 focus:ring-1 focus:ring-neutral-700 focus:outline-none'
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
+                        spellCheck='false'
+                        style={{
+                            backgroundColor: '#1a1a1a',
+                            color: '#e0e0e0',
+                            caretColor: '#e0e0e0'
+                        }}
+                    />
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export default function PostsPage() {
     const [posts, setPosts] = useState<Post[]>([]);
@@ -380,21 +436,19 @@ export default function PostsPage() {
                                                         <TabsTrigger value='js'>JS</TabsTrigger>
                                                     </TabsList>
                                                     <TabsContent value='html' className='m-0 flex-1 overflow-hidden'>
-                                                        <textarea
-                                                            placeholder='<div>Hello World</div>'
-                                                            className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
+                                                        <CodeEditor
+                                                            language='html'
                                                             value={formData.html}
-                                                            onChange={(e) => handleInputChange('html', e.target.value)}
-                                                            spellCheck={false}
+                                                            onChange={(val) => handleInputChange('html', val)}
+                                                            placeholder='<div>Hello World</div>'
                                                         />
                                                     </TabsContent>
                                                     <TabsContent value='js' className='m-0 flex-1 overflow-hidden'>
-                                                        <textarea
-                                                            placeholder='console.log(1);'
-                                                            className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
+                                                        <CodeEditor
+                                                            language='javascript'
                                                             value={formData.js}
-                                                            onChange={(e) => handleInputChange('js', e.target.value)}
-                                                            spellCheck={false}
+                                                            onChange={(val) => handleInputChange('js', val)}
+                                                            placeholder='console.log(1);'
                                                         />
                                                     </TabsContent>
                                                 </Tabs>
@@ -408,27 +462,21 @@ export default function PostsPage() {
                                                     <TabsContent
                                                         value='html_excerpt'
                                                         className='m-0 flex-1 overflow-hidden'>
-                                                        <textarea
-                                                            placeholder='<div>Excerpt HTML</div>'
-                                                            className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
+                                                        <CodeEditor
+                                                            language='html'
                                                             value={formData.html_excerpt}
-                                                            onChange={(e) =>
-                                                                handleInputChange('html_excerpt', e.target.value)
-                                                            }
-                                                            spellCheck={false}
+                                                            onChange={(val) => handleInputChange('html_excerpt', val)}
+                                                            placeholder='<div>Excerpt HTML</div>'
                                                         />
                                                     </TabsContent>
                                                     <TabsContent
                                                         value='js_excerpt'
                                                         className='m-0 flex-1 overflow-hidden'>
-                                                        <textarea
-                                                            placeholder='console.log(2);'
-                                                            className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
+                                                        <CodeEditor
+                                                            language='javascript'
                                                             value={formData.js_excerpt}
-                                                            onChange={(e) =>
-                                                                handleInputChange('js_excerpt', e.target.value)
-                                                            }
-                                                            spellCheck={false}
+                                                            onChange={(val) => handleInputChange('js_excerpt', val)}
+                                                            placeholder='console.log(2);'
                                                         />
                                                     </TabsContent>
                                                 </Tabs>
