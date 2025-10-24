@@ -278,42 +278,42 @@ export default function PostsPage() {
     }
 
     return (
-        <div className='flex h-screen w-full flex-col bg-neutral-100'>
+        <div className='flex h-screen w-full flex-col bg-neutral-950'>
             <div className='flex flex-1'>
                 <ResizablePanelGroup direction='horizontal' className='flex-1'>
                     <ResizablePanel defaultSize={20} minSize={15} maxSize={40} collapsible>
-                        <div className='flex h-full flex-col border-r border-neutral-300 bg-neutral-50'>
-                            <div className='border-b border-neutral-300 p-3'>
+                        <div className='flex h-full flex-col border-r border-neutral-800 bg-neutral-900'>
+                            <div className='border-b border-neutral-800 p-3'>
                                 <Button
                                     onClick={handleNewPost}
-                                    className='h-8 w-full gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
+                                    className='h-8 w-full gap-2 bg-blue-600 text-xs text-white hover:bg-blue-700'>
                                     <Plus className='h-3 w-3' />
                                     New
                                 </Button>
                             </div>
                             <div className='flex-1 overflow-y-auto'>
                                 {posts.length === 0 ? (
-                                    <div className='p-3 text-center text-xs text-neutral-500'>No posts yet</div>
+                                    <div className='p-3 text-center text-xs text-neutral-400'>No posts yet</div>
                                 ) : (
                                     <div className='space-y-1 p-2'>
                                         {posts.map((post) => (
                                             <div
                                                 key={post.id}
-                                                className='group flex items-center justify-between gap-1 rounded hover:bg-neutral-200'>
+                                                className='group flex items-center justify-between gap-1 rounded hover:bg-neutral-800'>
                                                 <button
                                                     onClick={() => handleSelectPost(post)}
                                                     className={`flex-1 truncate px-2 py-1.5 text-left text-xs transition-colors ${
                                                         selectedPostId === post.id
-                                                            ? 'bg-neutral-300 text-neutral-900'
-                                                            : 'text-neutral-700 hover:bg-neutral-100'
+                                                            ? 'bg-blue-600 text-white'
+                                                            : 'text-neutral-300 hover:bg-neutral-800'
                                                     }`}>
                                                     <FileText className='mr-1 mb-0.5 inline h-3 w-3' />
                                                     {post.title || 'Untitled'}
                                                 </button>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild>
-                                                        <button className='mr-1 rounded p-1 opacity-0 group-hover:opacity-100 hover:bg-neutral-200'>
-                                                            <Trash2 className='h-3 w-3 text-neutral-600' />
+                                                        <button className='mr-1 rounded p-1 opacity-0 group-hover:opacity-100 hover:bg-neutral-700'>
+                                                            <Trash2 className='h-3 w-3 text-neutral-400' />
                                                         </button>
                                                     </AlertDialogTrigger>
                                                     <AlertDialogContent>
@@ -326,7 +326,7 @@ export default function PostsPage() {
                                                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                                                             <AlertDialogAction
                                                                 onClick={() => handleDelete(post.id)}
-                                                                className='bg-neutral-900 text-white hover:bg-neutral-800'>
+                                                                className='bg-blue-600 text-white hover:bg-blue-700'>
                                                                 Delete
                                                             </AlertDialogAction>
                                                         </div>
@@ -342,34 +342,34 @@ export default function PostsPage() {
                     <ResizableHandle withHandle />
                     <ResizablePanel defaultSize={50} minSize={30}>
                         <div className='flex h-full flex-col'>
-                            <div className='border-b border-neutral-300 bg-white p-4'>
+                            <div className='border-b border-neutral-800 bg-neutral-900 p-4'>
                                 <form onSubmit={handleSubmit} className='flex items-center justify-between gap-4'>
                                     <div className='flex items-center gap-6'>
                                         <div className='flex flex-col gap-1'>
-                                            <label className='text-xs font-medium text-neutral-700'>Title</label>
+                                            <label className='text-xs font-medium text-neutral-300'>Title</label>
                                             <Input
                                                 placeholder='Post title'
                                                 value={formData.title}
                                                 onChange={(e) => handleInputChange('title', e.target.value)}
-                                                className='h-8 min-w-96 border-neutral-300 bg-neutral-50 text-xs text-neutral-900 placeholder:text-neutral-400'
+                                                className='h-8 min-w-96 border-neutral-700 bg-neutral-800 text-xs text-neutral-200 placeholder:text-neutral-500'
                                             />
                                         </div>
                                         <div className='flex flex-col gap-1'>
-                                            <label className='text-xs font-medium text-neutral-700'>Status</label>
+                                            <label className='text-xs font-medium text-neutral-300'>Status</label>
                                             <Select
                                                 value={formData.status}
                                                 onValueChange={(value) => handleInputChange('status', value)}>
-                                                <SelectTrigger className='h-8 min-w-32 border-neutral-300 bg-neutral-50 text-xs text-neutral-900'>
+                                                <SelectTrigger className='h-8 min-w-32 border-neutral-700 bg-neutral-800 text-xs text-neutral-200'>
                                                     <SelectValue />
                                                 </SelectTrigger>
-                                                <SelectContent className='border-neutral-300 bg-neutral-50'>
-                                                    <SelectItem value='draft' className='text-neutral-900'>
+                                                <SelectContent className='border-neutral-700 bg-neutral-800'>
+                                                    <SelectItem value='draft' className='text-neutral-200'>
                                                         Draft
                                                     </SelectItem>
-                                                    <SelectItem value='published' className='text-neutral-900'>
+                                                    <SelectItem value='published' className='text-neutral-200'>
                                                         Published
                                                     </SelectItem>
-                                                    <SelectItem value='archived' className='text-neutral-900'>
+                                                    <SelectItem value='archived' className='text-neutral-200'>
                                                         Archived
                                                     </SelectItem>
                                                 </SelectContent>
@@ -380,7 +380,7 @@ export default function PostsPage() {
                                         <Button
                                             type='submit'
                                             disabled={isSubmitting}
-                                            className='h-8 gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
+                                            className='h-8 gap-2 bg-blue-600 text-xs text-white hover:bg-blue-700'>
                                             {isSubmitting ? 'Saving...' : editingPost ? 'Update Post' : 'Create Post'}
                                         </Button>
                                         {editingPost && (
@@ -388,7 +388,7 @@ export default function PostsPage() {
                                                 <AlertDialogTrigger asChild>
                                                     <Button
                                                         type='button'
-                                                        className='h-8 gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
+                                                        className='h-8 gap-2 bg-red-600 text-xs text-white hover:bg-red-700'>
                                                         <Trash2 className='h-3 w-3' />
                                                         Delete
                                                     </Button>
@@ -403,7 +403,7 @@ export default function PostsPage() {
                                                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                                                         <AlertDialogAction
                                                             onClick={() => handleDelete(editingPost.id)}
-                                                            className='h-8 gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
+                                                            className='h-8 gap-2 bg-red-600 text-xs text-white hover:bg-red-700'>
                                                             Delete
                                                         </AlertDialogAction>
                                                     </div>
@@ -412,7 +412,7 @@ export default function PostsPage() {
                                         )}
                                     </div>
                                     {error && (
-                                        <div className='mt-2 rounded border border-red-200 bg-red-50 p-2 text-xs text-red-700'>
+                                        <div className='mt-2 rounded border border-red-900 bg-red-950 p-2 text-xs text-red-400'>
                                             {error}
                                         </div>
                                     )}
@@ -420,42 +420,18 @@ export default function PostsPage() {
                             </div>
                             <ResizablePanelGroup direction='horizontal' className='flex-1'>
                                 <ResizablePanel defaultSize={60} minSize={30}>
-                                    <div className='flex h-full flex-col border-r border-neutral-300 bg-white'>
+                                    <div className='flex h-full flex-col border-r border-neutral-800 bg-neutral-900'>
                                         <Tabs
                                             value={activeTab}
                                             onValueChange={(val) => setActiveTab(val as 'content' | 'excerpt')}
                                             className='flex h-full flex-col'>
-                                            <TabsList className='grid w-full grid-cols-2'>
-                                                <TabsTrigger value='content'>Content</TabsTrigger>
+                                            <TabsList className='grid w-full grid-cols-2 bg-neutral-900'>
                                                 <TabsTrigger value='excerpt'>Excerpt</TabsTrigger>
+                                                <TabsTrigger value='content'>Content</TabsTrigger>
                                             </TabsList>
-                                            <TabsContent value='content' className='flex flex-1 flex-col'>
-                                                <Tabs defaultValue='html' className='flex flex-1 flex-col'>
-                                                    <TabsList className='grid w-full grid-cols-2'>
-                                                        <TabsTrigger value='html'>HTML</TabsTrigger>
-                                                        <TabsTrigger value='js'>JS</TabsTrigger>
-                                                    </TabsList>
-                                                    <TabsContent value='html' className='m-0 flex-1 overflow-hidden'>
-                                                        <CodeEditor
-                                                            language='html'
-                                                            value={formData.html}
-                                                            onChange={(val) => handleInputChange('html', val)}
-                                                            placeholder='<div>Hello World</div>'
-                                                        />
-                                                    </TabsContent>
-                                                    <TabsContent value='js' className='m-0 flex-1 overflow-hidden'>
-                                                        <CodeEditor
-                                                            language='javascript'
-                                                            value={formData.js}
-                                                            onChange={(val) => handleInputChange('js', val)}
-                                                            placeholder='console.log(1);'
-                                                        />
-                                                    </TabsContent>
-                                                </Tabs>
-                                            </TabsContent>
                                             <TabsContent value='excerpt' className='flex flex-1 flex-col'>
                                                 <Tabs defaultValue='html_excerpt' className='flex flex-1 flex-col'>
-                                                    <TabsList className='grid w-full grid-cols-2'>
+                                                    <TabsList className='grid w-full grid-cols-2 bg-neutral-900'>
                                                         <TabsTrigger value='html_excerpt'>HTML</TabsTrigger>
                                                         <TabsTrigger value='js_excerpt'>JS</TabsTrigger>
                                                     </TabsList>
@@ -477,6 +453,30 @@ export default function PostsPage() {
                                                             value={formData.js_excerpt}
                                                             onChange={(val) => handleInputChange('js_excerpt', val)}
                                                             placeholder='console.log(2);'
+                                                        />
+                                                    </TabsContent>
+                                                </Tabs>
+                                            </TabsContent>
+                                            <TabsContent value='content' className='flex flex-1 flex-col'>
+                                                <Tabs defaultValue='html' className='flex flex-1 flex-col'>
+                                                    <TabsList className='grid w-full grid-cols-2 bg-neutral-900'>
+                                                        <TabsTrigger value='html'>HTML</TabsTrigger>
+                                                        <TabsTrigger value='js'>JS</TabsTrigger>
+                                                    </TabsList>
+                                                    <TabsContent value='html' className='m-0 flex-1 overflow-hidden'>
+                                                        <CodeEditor
+                                                            language='html'
+                                                            value={formData.html}
+                                                            onChange={(val) => handleInputChange('html', val)}
+                                                            placeholder='<div>Hello World</div>'
+                                                        />
+                                                    </TabsContent>
+                                                    <TabsContent value='js' className='m-0 flex-1 overflow-hidden'>
+                                                        <CodeEditor
+                                                            language='javascript'
+                                                            value={formData.js}
+                                                            onChange={(val) => handleInputChange('js', val)}
+                                                            placeholder='console.log(1);'
                                                         />
                                                     </TabsContent>
                                                 </Tabs>
