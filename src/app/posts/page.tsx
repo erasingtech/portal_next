@@ -270,42 +270,44 @@ export default function PostsPage() {
                     <ResizablePanel defaultSize={50} minSize={30}>
                         <div className='flex h-full flex-col'>
                             <div className='border-b border-neutral-300 bg-white p-4'>
-                                <form onSubmit={handleSubmit} className='flex flex-col gap-4 md:flex-row'>
-                                    <div className='space-y-1'>
-                                        <label className='block text-xs font-medium text-neutral-700'>Title</label>
-                                        <Input
-                                            placeholder='Post title'
-                                            value={formData.title}
-                                            onChange={(e) => handleInputChange('title', e.target.value)}
-                                            className='h-8 min-w-48 border-neutral-300 bg-neutral-50 text-xs text-neutral-900 placeholder:text-neutral-400'
-                                        />
+                                <form onSubmit={handleSubmit} className='flex items-center justify-between gap-4'>
+                                    <div className='flex items-center gap-6'>
+                                        <div className='flex flex-col gap-1'>
+                                            <label className='text-xs font-medium text-neutral-700'>Title</label>
+                                            <Input
+                                                placeholder='Post title'
+                                                value={formData.title}
+                                                onChange={(e) => handleInputChange('title', e.target.value)}
+                                                className='h-8 min-w-48 border-neutral-300 bg-neutral-50 text-xs text-neutral-900 placeholder:text-neutral-400'
+                                            />
+                                        </div>
+                                        <div className='flex flex-col gap-1'>
+                                            <label className='text-xs font-medium text-neutral-700'>Status</label>
+                                            <Select
+                                                value={formData.status}
+                                                onValueChange={(value) => handleInputChange('status', value)}>
+                                                <SelectTrigger className='h-8 min-w-32 border-neutral-300 bg-neutral-50 text-xs text-neutral-900'>
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                                <SelectContent className='border-neutral-300 bg-neutral-50'>
+                                                    <SelectItem value='draft' className='text-neutral-900'>
+                                                        Draft
+                                                    </SelectItem>
+                                                    <SelectItem value='published' className='text-neutral-900'>
+                                                        Published
+                                                    </SelectItem>
+                                                    <SelectItem value='archived' className='text-neutral-900'>
+                                                        Archived
+                                                    </SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
                                     </div>
-                                    <div className='space-y-1'>
-                                        <label className='block text-xs font-medium text-neutral-700'>Status</label>
-                                        <Select
-                                            value={formData.status}
-                                            onValueChange={(value) => handleInputChange('status', value)}>
-                                            <SelectTrigger className='h-8 min-w-32 border-neutral-300 bg-neutral-50 text-xs text-neutral-900'>
-                                                <SelectValue />
-                                            </SelectTrigger>
-                                            <SelectContent className='border-neutral-300 bg-neutral-50'>
-                                                <SelectItem value='draft' className='text-neutral-900'>
-                                                    Draft
-                                                </SelectItem>
-                                                <SelectItem value='published' className='text-neutral-900'>
-                                                    Published
-                                                </SelectItem>
-                                                <SelectItem value='archived' className='text-neutral-900'>
-                                                    Archived
-                                                </SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-                                    <div className='flex flex-col gap-2 md:ml-4'>
+                                    <div className='flex gap-2'>
                                         <Button
                                             type='submit'
                                             disabled={isSubmitting}
-                                            className='h-8 w-full gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
+                                            className='h-8 gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
                                             {isSubmitting ? 'Saving...' : editingPost ? 'Update Post' : 'Create Post'}
                                         </Button>
                                         {editingPost && (
@@ -313,7 +315,7 @@ export default function PostsPage() {
                                                 <AlertDialogTrigger asChild>
                                                     <Button
                                                         type='button'
-                                                        className='h-8 w-full gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
+                                                        className='h-8 gap-2 bg-neutral-900 text-xs text-white hover:bg-neutral-800'>
                                                         <Trash2 className='h-3 w-3' />
                                                         Delete
                                                     </Button>
