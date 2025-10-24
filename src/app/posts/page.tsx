@@ -43,6 +43,7 @@ export default function PostsPage() {
     const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
     const [previewKey, setPreviewKey] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [activeTab, setActiveTab] = useState<'content' | 'excerpt'>('content');
     const [formData, setFormData] = useState({
         title: '',
         slug: '',
@@ -192,7 +193,9 @@ export default function PostsPage() {
         }
     };
 
-    const previewHtml = `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"><\/script></head><body style="margin: 0; padding: 8px;">${formData.html}<script>${formData.js}<\/script></body></html>`;
+    const previewHtml = `<!DOCTYPE html><html><head><script src="https://cdn.tailwindcss.com"><\/script></head><body style="margin: 0; padding: 8px;">${
+        activeTab === 'content' ? formData.html : formData.html_excerpt
+    }<script>${activeTab === 'content' ? formData.js : formData.js_excerpt}<\/script></body></html>`;
 
     if (loading) {
         return (
@@ -348,7 +351,10 @@ export default function PostsPage() {
                             <ResizablePanelGroup direction='horizontal' className='flex-1'>
                                 <ResizablePanel defaultSize={60} minSize={30}>
                                     <div className='flex h-full flex-col border-r border-neutral-300 bg-white'>
-                                        <Tabs defaultValue='content' className='flex h-full flex-col'>
+                                        <Tabs
+                                            value={activeTab}
+                                            onValueChange={(val) => setActiveTab(val as 'content' | 'excerpt')}
+                                            className='flex h-full flex-col'>
                                             <TabsList className='grid w-full grid-cols-2'>
                                                 <TabsTrigger value='content'>Content</TabsTrigger>
                                                 <TabsTrigger value='excerpt'>Excerpt</TabsTrigger>

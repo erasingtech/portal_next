@@ -10,6 +10,8 @@ export const postSchema = z.object({
         .max(100, 'Slug too long'),
     html_content: z.string().optional().default(''),
     js_content: z.string().optional().default(''),
+    html_excerpt: z.string().optional().default(''),
+    js_excerpt: z.string().optional().default(''),
     excerpt: z.string().max(300, 'Excerpt too long').optional().or(z.literal('')),
     status: z.enum(['draft', 'published', 'archived']).default('draft'),
     published_at: z.string().nullable().optional()
