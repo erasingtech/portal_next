@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="503px" height="503px" viewBox="0 0 503 503" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>favicon</title>
+    <g id="favicon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M441,311.891156 L441,384 L261,384 L261,311.891156 L441,311.891156 Z M321,215.746032 L321,287.854875 L201,287.854875 L201,215.746032 L321,215.746032 Z M441,119 L441,191.108844 L201,191.108844 L201,119 L441,119 Z" id="Shape" fill="#282828"></path>
+        <path d="M237,311.891156 L237,384 L117,384 L117,311.891156 L237,311.891156 Z M177,215.746032 L177,287.854875 L63,287.854875 L63,215.746032 L177,215.746032 Z M177,119 L177,191.108844 L63,191.108844 L63,119 L177,119 Z" id="Shape" fill="#CECECE"></path>
+    </g>
+</svg>
