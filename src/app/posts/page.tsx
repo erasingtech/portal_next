@@ -27,6 +27,8 @@ interface Post {
     html_content: string;
     js_content: string;
     excerpt: string | null;
+    html_excerpt: string | null;
+    js_excerpt: string | null;
     author_id: string | null;
     status: string;
     published_at: string | null;
@@ -47,6 +49,8 @@ const PostsPage = () => {
         title: '',
         slug: '',
         excerpt: '',
+        html_excerpt: '',
+        js_excerpt: '',
         status: 'draft' as 'draft' | 'published' | 'archived',
         html: '',
         js: ''
@@ -83,6 +87,8 @@ const PostsPage = () => {
             title: post.title,
             slug: post.slug,
             excerpt: post.excerpt || '',
+            html_excerpt: post.html_excerpt || '',
+            js_excerpt: post.js_excerpt || '',
             status: (post.status as any) || 'draft',
             html: post.html_content,
             js: post.js_content || ''
@@ -96,6 +102,8 @@ const PostsPage = () => {
             title: '',
             slug: '',
             excerpt: '',
+            html_excerpt: '',
+            js_excerpt: '',
             status: 'draft',
             html: '',
             js: ''
@@ -119,7 +127,7 @@ const PostsPage = () => {
         } else {
             setFormData((prev) => ({ ...prev, [field]: value }));
         }
-        if (field === 'html' || field === 'js') {
+        if (['html', 'js', 'html_excerpt', 'js_excerpt'].includes(field)) {
             setPreviewKey((k) => k + 1);
         }
     };
@@ -160,6 +168,8 @@ const PostsPage = () => {
                 title: formData.title,
                 slug: formData.slug,
                 excerpt: formData.excerpt,
+                html_excerpt: formData.html_excerpt,
+                js_excerpt: formData.js_excerpt,
                 status: formData.status,
                 html_content: formData.html,
                 js_content: formData.js,
@@ -294,30 +304,66 @@ const PostsPage = () => {
                         {/* Editor */}
                         <ResizablePanel defaultSize={60} minSize={30}>
                             <div className='flex h-full flex-col border-r border-neutral-300 bg-white'>
-                                <Tabs defaultValue='html' className='flex h-full flex-col'>
+                                <Tabs defaultValue='content' className='flex h-full flex-col'>
                                     <TabsList className='grid w-full grid-cols-2'>
-                                        <TabsTrigger value='html'>HTML</TabsTrigger>
-                                        <TabsTrigger value='js'>JS</TabsTrigger>
+                                        <TabsTrigger value='content'>Content</TabsTrigger>
+                                        <TabsTrigger value='excerpt'>Excerpt</TabsTrigger>
                                     </TabsList>
 
-                                    <TabsContent value='html' className='m-0 flex-1 overflow-hidden'>
-                                        <textarea
-                                            placeholder='<div>Hello World</div>'
-                                            className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
-                                            value={formData.html}
-                                            onChange={(e) => handleInputChange('html', e.target.value)}
-                                            spellCheck='false'
-                                        />
+                                    {/* Content Tab */}
+                                    <TabsContent value='content' className='flex flex-1 flex-col'>
+                                        <Tabs defaultValue='html' className='flex flex-1 flex-col'>
+                                            <TabsList className='grid w-full grid-cols-2'>
+                                                <TabsTrigger value='html'>HTML</TabsTrigger>
+                                                <TabsTrigger value='js'>JS</TabsTrigger>
+                                            </TabsList>
+                                            <TabsContent value='html' className='m-0 flex-1 overflow-hidden'>
+                                                <textarea
+                                                    placeholder='<div>Hello World</div>'
+                                                    className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
+                                                    value={formData.html}
+                                                    onChange={(e) => handleInputChange('html', e.target.value)}
+                                                    spellCheck='false'
+                                                />
+                                            </TabsContent>
+                                            <TabsContent value='js' className='m-0 flex-1 overflow-hidden'>
+                                                <textarea
+                                                    placeholder='console.log("Hello");'
+                                                    className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
+                                                    value={formData.js}
+                                                    onChange={(e) => handleInputChange('js', e.target.value)}
+                                                    spellCheck='false'
+                                                />
+                                            </TabsContent>
+                                        </Tabs>
                                     </TabsContent>
 
-                                    <TabsContent value='js' className='m-0 flex-1 overflow-hidden'>
-                                        <textarea
-                                            placeholder='console.log("Hello");'
-                                            className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
-                                            value={formData.js}
-                                            onChange={(e) => handleInputChange('js', e.target.value)}
-                                            spellCheck='false'
-                                        />
+                                    {/* Excerpt Tab */}
+                                    <TabsContent value='excerpt' className='flex flex-1 flex-col'>
+                                        <Tabs defaultValue='html_excerpt' className='flex flex-1 flex-col'>
+                                            <TabsList className='grid w-full grid-cols-2'>
+                                                <TabsTrigger value='html_excerpt'>HTML</TabsTrigger>
+                                                <TabsTrigger value='js_excerpt'>JS</TabsTrigger>
+                                            </TabsList>
+                                            <TabsContent value='html_excerpt' className='m-0 flex-1 overflow-hidden'>
+                                                <textarea
+                                                    placeholder='<div>Excerpt HTML</div>'
+                                                    className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
+                                                    value={formData.html_excerpt}
+                                                    onChange={(e) => handleInputChange('html_excerpt', e.target.value)}
+                                                    spellCheck='false'
+                                                />
+                                            </TabsContent>
+                                            <TabsContent value='js_excerpt' className='m-0 flex-1 overflow-hidden'>
+                                                <textarea
+                                                    placeholder='console.log("Excerpt");'
+                                                    className='h-full w-full resize-none border-0 bg-neutral-50 p-3 font-mono text-sm text-neutral-900 placeholder:text-neutral-400 focus:bg-white focus:outline-none'
+                                                    value={formData.js_excerpt}
+                                                    onChange={(e) => handleInputChange('js_excerpt', e.target.value)}
+                                                    spellCheck='false'
+                                                />
+                                            </TabsContent>
+                                        </Tabs>
                                     </TabsContent>
                                 </Tabs>
                             </div>
@@ -360,18 +406,6 @@ const PostsPage = () => {
                                         value={formData.title}
                                         onChange={(e) => handleInputChange('title', e.target.value)}
                                         className='h-8 border-neutral-300 bg-neutral-50 text-xs text-neutral-900 placeholder:text-neutral-400'
-                                    />
-                                </div>
-
-                                {/* Excerpt */}
-                                <div className='space-y-1'>
-                                    <label className='block text-xs font-medium text-neutral-700'>Excerpt</label>
-                                    <Textarea
-                                        placeholder='Brief summary'
-                                        value={formData.excerpt}
-                                        onChange={(e) => handleInputChange('excerpt', e.target.value)}
-                                        className='resize-none border-neutral-300 bg-neutral-50 text-xs text-neutral-900 placeholder:text-neutral-400'
-                                        rows={3}
                                     />
                                 </div>
 

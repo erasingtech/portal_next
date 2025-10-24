@@ -9,6 +9,8 @@ export type Database = {
                     html_content: string;
                     js_content: string;
                     excerpt: string | null;
+                    html_excerpt: string | null;
+                    js_excerpt: string | null;
                     author_id: string | null;
                     status: string;
                     published_at: string | null;
@@ -22,6 +24,8 @@ export type Database = {
                     html_content: string;
                     js_content?: string;
                     excerpt?: string | null;
+                    html_excerpt?: string | null;
+                    js_excerpt?: string | null;
                     author_id?: string | null;
                     status?: string;
                     published_at?: string | null;
@@ -35,6 +39,8 @@ export type Database = {
                     html_content?: string;
                     js_content?: string;
                     excerpt?: string | null;
+                    html_excerpt?: string | null;
+                    js_excerpt?: string | null;
                     author_id?: string | null;
                     status?: string;
                     published_at?: string | null;
