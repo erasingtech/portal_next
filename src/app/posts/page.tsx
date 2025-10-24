@@ -114,6 +114,17 @@ export default function PostsPage() {
         fetchPosts();
     }, []);
 
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+                e.preventDefault();
+                handleSubmit(e as any);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [formData, editingPost]);
+
     const fetchPosts = async () => {
         try {
             setLoading(true);
